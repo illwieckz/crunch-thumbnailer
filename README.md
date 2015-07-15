@@ -9,6 +9,13 @@ It uses the [`crunch`](https://github.com/Unvanquished/crunch) tool to decode th
 
 Mime-type definitions for `image/x-dds` and `image/x-crn` are installed too if they are missing.
 
+How it looks
+------------
+
+Here is an example of thumbnails displayed by `nautilus`:
+
+![Nautilus displaying crn thumbnails](doc/nautilus-crn-thumbnails.png)
+
 Installation
 ------------
 
