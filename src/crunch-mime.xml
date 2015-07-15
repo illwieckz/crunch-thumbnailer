@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+   <mime-type type="image/x-crn">
+	 <comment>CRN surface</comment>
+	 <magic priority="50">
+	   <match value="Hx" type="string" offset="0"/>
+	 </magic>
+	 <glob pattern="*.crn"/>
+   </mime-type>
+</mime-info>
