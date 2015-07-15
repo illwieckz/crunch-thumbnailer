@@ -1,0 +1,70 @@
+#! /bin/sh
+
+tab="$(printf '\t')"
+
+cat > Makefile <<EOF
+all:
+
+install:
+${tab}install -m +r,u+w src/crunch.thumbnailer /usr/share/thumbnailers/crunch.thumbnailer
+${tab}install -m +rx,u+w src/crunch_thumbnailer.sh /usr/bin/crunch_thumbnailer.sh
+EOF
+
+if [ "x$(xdg-mime query filetype samples/sample.dds)" != 'ximage/x-dds' ]
+then
+	echo "image/x-dds mimetype file definition is missing, will install it"
+	alias missingdds=true
+else
+	alias missingdds=false
+fi
+
+if [ "x$(xdg-mime query filetype samples/sample.crn)" != 'ximage/x-crn' ]
+then
+	echo "image/x-crn mimetype file definition is missing, will install it"
+	alias missingcrn=true
+else
+	alias missingcrn=false
+fi
+
+if missingdds
+then
+	cat >> Makefile <<-EOF
+	${tab}install -m +r,u+w src/crunch-dds-mime.xml /usr/share/mime/packages/crunch-dds-mime.xml
+	EOF
+fi
+
+if missingcrn
+then
+	cat >> Makefile <<-EOF
+	${tab}install -m +r,u+w src/crunch-crn-mime.xml /usr/share/mime/packages/crunch-crn-mime.xml
+	EOF
+fi
+
+cat >> Makefile <<-EOF
+
+uninstall:
+${tab}rm /usr/share/thumbnailers/crunch.thumbnailer
+${tab}rm /usr/bin/crunch_thumbnailer.sh
+EOF
+
+if missingdds
+then
+	cat >> Makefile <<-EOF
+	${tab}rm /usr/share/mime/packages/crunch-dds-mime.xml
+	EOF
+fi
+
+if missingcrn
+then
+	cat >> Makefile <<-EOF
+	${tab}rm /usr/share/mime/packages/crunch-crn-mime.xml
+	EOF
+fi
+
+cat >> Makefile <<EOF
+
+update-db:
+${tab}update-mime-database /usr/share/mime
+EOF
+
+#EOF

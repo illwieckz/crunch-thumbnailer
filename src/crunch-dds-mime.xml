@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+   <mime-type type="image/x-dds">
+	 <comment>Direct Draw Surface</comment>
+	 <magic priority="50">
+	   <match value="DDS" type="string" offset="0"/>
+	 </magic>
+	 <glob pattern="*.dds"/>
+   </mime-type>
+</mime-info>
