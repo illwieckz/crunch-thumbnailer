@@ -43,7 +43,7 @@ _main() {
 		OUTFILE="${4}"
 	fi
 
-	crunch -quiet -file "${INFILE}" -fileformat 'tga' -out '/dev/stdout' | convert -thumbnail "${SIZE}x${SIZE}" tga:- "${OUTFILE}"
+	crunch -quiet -file "${INFILE}" -fileformat 'tga' -out '/dev/stdout' | convert -thumbnail "${SIZE}x${SIZE}" tga:- "png:${OUTFILE}"
 }
 
 _main "${1}" "${2}" "${3}" "${4}"
