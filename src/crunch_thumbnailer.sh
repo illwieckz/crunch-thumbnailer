@@ -7,7 +7,11 @@ _help() {
 	cat <<-EOF
 	USAGE: ${0} -s SIZE INFILE OUTFILE
 	EOF
+}
 
+_error() {
+	printf 'ERROR: %s\n\n' "${1}"
+	_help
 	exit 1
 }
 
@@ -15,30 +19,31 @@ _main() {
 	if [ "x${1}" = 'x-h' -o "x${1}" = 'x--help' ]
 	then
 		_help
+		exit
 	fi
 
 	if [ "x${1}" != 'x-s' ]
 	then
-		_help
+		_error 'first argument must be -s'
 	fi
 
 	if [ "x${2}" = 'x' ]
 	then
-		_help
+		_error 'second argument must be a number'
 	else
 		SIZE="${2}"
 	fi
 
 	if [ "x${3}" = 'x' ]
 	then
-		_help
+		_error 'third argument must be the input file'
 	else
 		INFILE="${3}"
 	fi
 
 	if [ "x${4}" = 'x' ]
 	then
-		_help
+		_error 'fourth argument must be the output file'
 	else
 		OUTFILE="${4}"
 	fi
