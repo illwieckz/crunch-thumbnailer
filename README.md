@@ -31,7 +31,7 @@ About the thumbnailer
 It can be used by third party projects like that:
 
 ```
-crunch_thumbnailer.sh -s SIZE INFILE OUTFILE
+crunch_thumbnailer -s SIZE INFILE OUTFILE
 ```
 
 Warning
