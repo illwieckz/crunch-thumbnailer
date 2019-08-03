@@ -1,1 +1,6 @@
 Makefile
+description-pak
+doc-pak
+*.deb
+*.rpm
+*.tgz
