@@ -1,4 +1,4 @@
 [Thumbnailer Entry]
 TryExec=crunch
-Exec=crunch_thumbnailer -s %s %i %o
+Exec=crunch-thumbnailer -s %s %i %o
 MimeType=image/x-dds;image/x-crn;

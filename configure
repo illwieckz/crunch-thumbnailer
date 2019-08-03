@@ -7,7 +7,7 @@ all:
 
 install:
 ${tab}install -m +r,u+w src/crunch.thumbnailer /usr/share/thumbnailers/crunch.thumbnailer
-${tab}install -m +rx,u+w src/crunch_thumbnailer /usr/bin/crunch_thumbnailer
+${tab}install -m +rx,u+w src/crunch-thumbnailer /usr/bin/crunch-thumbnailer
 EOF
 
 if [ "x$(xdg-mime query filetype samples/sample.dds)" != 'ximage/x-dds' ]
@@ -44,7 +44,7 @@ cat >> Makefile <<-EOF
 
 uninstall:
 ${tab}rm /usr/share/thumbnailers/crunch.thumbnailer
-${tab}rm /usr/bin/crunch_thumbnailer
+${tab}rm /usr/bin/crunch-thumbnailer
 EOF
 
 if missingdds
