@@ -2,8 +2,11 @@
 
 tab="$(printf '\t')"
 
-cat > Makefile <<EOF
-all:
+cat > Makefile <<-EOF
+.DEFAULT_GOAL := build
+.PHONY: build install checkinstall uninstall
+
+build:
 
 install:
 ${tab}install -m +r,u+w src/crunch.thumbnailer /usr/share/thumbnailers/crunch.thumbnailer
