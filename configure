@@ -42,6 +42,17 @@ fi
 
 cat >> Makefile <<-EOF
 
+checkinstall:
+${tab}fakeroot checkinstall \
+${tab}${tab}--fstrans=yes \
+${tab}${tab}--install=no \
+${tab}${tab}--pkgname="crunch-thumbnailer" \
+${tab}${tab}--pkglicense="ISC" \
+${tab}${tab}--pkgversion="0~\$(shell git log -1 --format=%at | xargs -I{} date -d '@{}' '+%Y%m%d-%H%M%S')~\$(shell git log --format="%H" -n 1 | cut -c1-7)" \
+${tab}${tab}--pkgrelease="\$(shell date --utc '+%Y%m%d-%H%M%S')"
+EOF
+
+cat >> Makefile <<-EOF
 uninstall:
 ${tab}rm /usr/share/thumbnailers/crunch.thumbnailer
 ${tab}rm /usr/bin/crunch-thumbnailer
