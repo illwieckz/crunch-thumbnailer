@@ -4,10 +4,11 @@ Crunch Thumbnailer
 Description
 -----------
 
-This tool is a thumbnailer for the [GNOME](https://www.gnome.org/) desktop. It generates thumbnails for `.dds` and `.crn` texture files.
-It uses the [`crunch`](https://github.com/Unvanquished/crunch) tool to decode these files then it uses the `convert` tool from [ImageMagick](http://www.imagemagick.org/) to generate thumbnails.
+This is a thumbnailer for the [GNOME](https://www.gnome.org/) desktop. It generates thumbnails for `.ktx`, `.dds` and `.crn` texture files.
 
-Mime-type definitions for `image/x-dds` and `image/x-crn` are installed too if they are missing.
+It relies on the [`crunch`](https://github.com/Unvanquished/crunch) tool to decode these files then it uses the `convert` tool from [ImageMagick](http://www.imagemagick.org/) to generate thumbnails.
+
+Mime-type definitions for `image/ktx`, `image/x-dds` and `image/x-crn` are installed if they are missing.
 
 How it looks
 ------------
@@ -28,7 +29,7 @@ make update-db
 About the thumbnailer
 ---------------------
 
-It can be used by third party projects like that:
+It can be used by third party projects this way:
 
 ```
 crunch-thumbnailer -s SIZE INFILE OUTFILE

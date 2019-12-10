@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+   <mime-type type="image/ktx">
+	 <comment>Khronos KTX texture</comment>
+	 <magic priority="50">
+	   <match value="KTX 11" type="string" offset="1"/>
+	 </magic>
+	 <glob pattern="*.ktx"/>
+   </mime-type>
+</mime-info>

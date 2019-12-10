@@ -13,6 +13,13 @@ ${tab}install -m +r,u+w src/crunch.thumbnailer /usr/share/thumbnailers/crunch.th
 ${tab}install -m +rx,u+w src/crunch-thumbnailer /usr/bin/crunch-thumbnailer
 EOF
 
+missing_ktx='false'
+if [ "$(xdg-mime query filetype samples/sample.ktx)" != 'image/ktx' ]
+then
+	echo "image/ktx mimetype file definition is missing, will install it"
+	missing_ktx='true'
+fi
+
 missing_dds='false'
 if [ "$(xdg-mime query filetype samples/sample.dds)" != 'image/x-dds' ]
 then
@@ -25,6 +32,13 @@ if [ "$(xdg-mime query filetype samples/sample.crn)" != 'image/x-crn' ]
 then
 	echo "image/x-crn mimetype file definition is missing, will install it"
 	missing_crn='true'
+fi
+
+if "${missing_ktx}"
+then
+	cat >> 'Makefile' <<-EOF
+	${tab}install -m +r,u+w src/crunch-ktx-mime.xml /usr/share/mime/packages/crunch-ktx-mime.xml
+	EOF
 fi
 
 if "${missing_dds}"
@@ -60,6 +74,13 @@ uninstall:
 ${tab}rm /usr/share/thumbnailers/crunch.thumbnailer
 ${tab}rm /usr/bin/crunch-thumbnailer
 EOF
+
+if "${missing_ktx}"
+then
+	cat >> 'Makefile' <<-EOF
+	${tab}rm /usr/share/mime/packages/crunch-ktx-mime.xml
+	EOF
+fi
 
 if "${missing_dds}"
 then
