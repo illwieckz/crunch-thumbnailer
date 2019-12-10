@@ -2,9 +2,9 @@
 
 tab="$(printf '\t')"
 
-cat > Makefile <<-EOF
+cat > 'Makefile' <<-EOF
 .DEFAULT_GOAL := build
-.PHONY: build install checkinstall uninstall
+.PHONY: build install checkinstall uninstall update-db
 
 build:
 
@@ -13,72 +13,70 @@ ${tab}install -m +r,u+w src/crunch.thumbnailer /usr/share/thumbnailers/crunch.th
 ${tab}install -m +rx,u+w src/crunch-thumbnailer /usr/bin/crunch-thumbnailer
 EOF
 
-if [ "x$(xdg-mime query filetype samples/sample.dds)" != 'ximage/x-dds' ]
+missing_dds='false'
+if [ "$(xdg-mime query filetype samples/sample.dds)" != 'image/x-dds' ]
 then
 	echo "image/x-dds mimetype file definition is missing, will install it"
-	alias missingdds=true
-else
-	alias missingdds=false
+	missing_dds='true'
 fi
 
-if [ "x$(xdg-mime query filetype samples/sample.crn)" != 'ximage/x-crn' ]
+missing_crn='false'
+if [ "$(xdg-mime query filetype samples/sample.crn)" != 'image/x-crn' ]
 then
 	echo "image/x-crn mimetype file definition is missing, will install it"
-	alias missingcrn=true
-else
-	alias missingcrn=false
+	missing_crn='true'
 fi
 
-if missingdds
+if "${missing_dds}"
 then
-	cat >> Makefile <<-EOF
+	cat >> 'Makefile' <<-EOF
 	${tab}install -m +r,u+w src/crunch-dds-mime.xml /usr/share/mime/packages/crunch-dds-mime.xml
 	EOF
 fi
 
-if missingcrn
+if "${missing_crn}"
 then
-	cat >> Makefile <<-EOF
+	cat >> 'Makefile' <<-EOF
 	${tab}install -m +r,u+w src/crunch-crn-mime.xml /usr/share/mime/packages/crunch-crn-mime.xml
 	EOF
 fi
 
-cat >> Makefile <<-EOF
+cat >> 'Makefile' <<-EOF
 
 checkinstall:
-${tab}fakeroot checkinstall \
-${tab}${tab}--fstrans=yes \
-${tab}${tab}--install=no \
-${tab}${tab}--pkgname="crunch-thumbnailer" \
-${tab}${tab}--pkglicense="ISC" \
-${tab}${tab}--pkgversion="0~\$(shell git log -1 --format=%at | xargs -I{} date -d '@{}' '+%Y%m%d-%H%M%S')~\$(shell git log --format="%H" -n 1 | cut -c1-7)" \
+${tab}fakeroot checkinstall \\
+${tab}${tab}--fstrans=yes \\
+${tab}${tab}--install=no \\
+${tab}${tab}--pkgname="crunch-thumbnailer" \\
+${tab}${tab}--pkglicense="ISC" \\
+${tab}${tab}--pkgarch="all" \\
+${tab}${tab}--pkgversion="0~\$(shell git log -1 --format=%at | xargs -I{} date -d '@{}' '+%Y%m%d-%H%M%S')~\$(shell git log --format="%H" -n 1 | cut -c1-7)" \\
 ${tab}${tab}--pkgrelease="\$(shell date --utc '+%Y%m%d-%H%M%S')"
 EOF
 
-cat >> Makefile <<-EOF
+cat >> 'Makefile' <<-EOF
+
 uninstall:
 ${tab}rm /usr/share/thumbnailers/crunch.thumbnailer
 ${tab}rm /usr/bin/crunch-thumbnailer
 EOF
 
-if missingdds
+if "${missing_dds}"
 then
-	cat >> Makefile <<-EOF
+	cat >> 'Makefile' <<-EOF
 	${tab}rm /usr/share/mime/packages/crunch-dds-mime.xml
 	EOF
 fi
 
-if missingcrn
+if "${missing_crn}"
 then
-	cat >> Makefile <<-EOF
+	cat >> 'Makefile' <<-EOF
 	${tab}rm /usr/share/mime/packages/crunch-crn-mime.xml
 	EOF
 fi
 
-cat >> Makefile <<EOF
+cat >> 'Makefile' <<EOF
 
 update-db:
 ${tab}update-mime-database /usr/share/mime
 EOF
-
-#EOF
