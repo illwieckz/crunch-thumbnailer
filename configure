@@ -2,7 +2,91 @@
 
 set -u -e -o pipefail
 
-tab="$(printf '\t')"
+tab=$'\t'
+
+_help() {
+	cat <<-EOF
+	USAGE: ${0}
+
+	By default the script tries to detect if mimetype is missing
+	and will only install missing mimetype definitions.
+
+	To force install or not install mime-type definitions, options can be used:
+
+	${tab}--enable-ktx|--disable-ktx
+	${tab}--enable-dds|--disable-dds
+	${tab}--enable-crn|--disable-crn
+	EOF
+
+	exit "${1}"
+}
+
+while [ -n "${1:-}" ]
+do
+	case "${1}" in
+		'--enable-ktx')
+			enable_ktx='true'
+			;;
+		'--disable-ktx')
+			enable_ktx='false'
+			;;
+		'--enable-dds')
+			enable_dds='true'
+			;;
+		'--disable-dds')
+			enable_dds='false'
+			;;
+		'--enable-crn')
+			enable_crn='true'
+			;;
+		'--disable-crn')
+			enable_crn='false'
+			;;
+		'-h'|'--help')
+			_help 0
+			;;
+		*)
+			printf 'ERROR: unkown option %s\n\n' "${1}" >&2
+			_help 1
+	esac
+	shift
+done
+
+if [ -z "${enable_ktx:-}" ]
+then
+	if [ "$(xdg-mime query filetype samples/sample.ktx)" != 'image/ktx' ]
+	then
+		echo 'image/ktx mimetype file definition is missing, will install it'
+		enable_ktx='true'
+	else
+		echo 'image/ktx mimetype file definition is present, will not install it'
+		enable_ktx='false'
+	fi
+fi
+
+if [ -z "${enable_dds:-}" ]
+then
+	if [ "$(xdg-mime query filetype samples/sample.dds)" != 'image/x-dds' ]
+	then
+		echo 'image/x-dds mimetype file definition is missing, will install it'
+		enable_dds='true'
+	else
+		echo 'image/x-dds mimetype file definition is present, will not install it'
+		enable_dds='false'
+	fi
+fi
+
+if [ -z "${enable_crn:-}" ]
+then
+	if [ "$(xdg-mime query filetype samples/sample.crn)" != 'image/x-crn' ]
+	then
+		echo 'image/x-crn mimetype file definition is missing, will install it'
+		enable_crn='true'
+	else
+		echo 'image/x-crn mimetype file definition is present, will not install it'
+		enable_crn='false'
+	fi
+fi
 
 cat > 'Makefile' <<-EOF
 .DEFAULT_GOAL := build
@@ -15,42 +99,21 @@ ${tab}install -m +r,u+w src/crunch.thumbnailer /usr/share/thumbnailers/crunch.th
 ${tab}install -m +rx,u+w src/crunch-thumbnailer /usr/bin/crunch-thumbnailer
 EOF
 
-missing_ktx='false'
-if [ "$(xdg-mime query filetype samples/sample.ktx)" != 'image/ktx' ]
-then
-	echo "image/ktx mimetype file definition is missing, will install it"
-	missing_ktx='true'
-fi
-
-missing_dds='false'
-if [ "$(xdg-mime query filetype samples/sample.dds)" != 'image/x-dds' ]
-then
-	echo "image/x-dds mimetype file definition is missing, will install it"
-	missing_dds='true'
-fi
-
-missing_crn='false'
-if [ "$(xdg-mime query filetype samples/sample.crn)" != 'image/x-crn' ]
-then
-	echo "image/x-crn mimetype file definition is missing, will install it"
-	missing_crn='true'
-fi
-
-if "${missing_ktx}"
+if "${enable_ktx}"
 then
 	cat >> 'Makefile' <<-EOF
 	${tab}install -m +r,u+w src/crunch-ktx-mime.xml /usr/share/mime/packages/crunch-ktx-mime.xml
 	EOF
 fi
 
-if "${missing_dds}"
+if "${enable_dds}"
 then
 	cat >> 'Makefile' <<-EOF
 	${tab}install -m +r,u+w src/crunch-dds-mime.xml /usr/share/mime/packages/crunch-dds-mime.xml
 	EOF
 fi
 
-if "${missing_crn}"
+if "${enable_crn}"
 then
 	cat >> 'Makefile' <<-EOF
 	${tab}install -m +r,u+w src/crunch-crn-mime.xml /usr/share/mime/packages/crunch-crn-mime.xml
@@ -77,21 +140,21 @@ ${tab}rm /usr/share/thumbnailers/crunch.thumbnailer
 ${tab}rm /usr/bin/crunch-thumbnailer
 EOF
 
-if "${missing_ktx}"
+if "${enable_ktx}"
 then
 	cat >> 'Makefile' <<-EOF
 	${tab}rm /usr/share/mime/packages/crunch-ktx-mime.xml
 	EOF
 fi
 
-if "${missing_dds}"
+if "${enable_dds}"
 then
 	cat >> 'Makefile' <<-EOF
 	${tab}rm /usr/share/mime/packages/crunch-dds-mime.xml
 	EOF
 fi
 
-if "${missing_crn}"
+if "${enable_crn}"
 then
 	cat >> 'Makefile' <<-EOF
 	${tab}rm /usr/share/mime/packages/crunch-crn-mime.xml
