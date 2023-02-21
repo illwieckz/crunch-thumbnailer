@@ -1,7 +1,9 @@
-#! /bin/sh
+#! /usr/bin/env bash
 
 # Author:  Thomas DEBESSE <dev@illwieckz.net>
 # License: ISC
+
+set -u -e -o pipefail
 
 _help() {
 	cat <<-EOF
@@ -16,32 +18,33 @@ _error() {
 }
 
 _main() {
-	if [ "x${1}" = 'x-h' -o "x${1}" = 'x--help' ]
-	then
-		_help
-		exit
-	fi
+	case "${1:-}" in
+		'-h'|'--help')
+			_help
+			exit
+		;;
+	esac
 
-	if [ "x${1}" != 'x-s' ]
+	if [ "${1:-}" != '-s' ]
 	then
 		_error 'first argument must be -s'
 	fi
 
-	if [ "x${2}" = 'x' ]
+	if [ -z "${2:-}" ]
 	then
 		_error 'second argument must be a number'
 	else
 		SIZE="${2}"
 	fi
 
-	if [ "x${3}" = 'x' ]
+	if [ -z "x${3:-}" ]
 	then
 		_error 'third argument must be the input file'
 	else
 		INFILE="${3}"
 	fi
 
-	if [ "x${4}" = 'x' ]
+	if [ -z "x${4:-}" ]
 	then
 		_error 'fourth argument must be the output file'
 	else
@@ -51,6 +54,6 @@ _main() {
 	crunch -quiet -file "${INFILE}" -fileformat 'tga' -out '/dev/stdout' | convert -thumbnail "${SIZE}x${SIZE}" -auto-orient tga:- "png:${OUTFILE}"
 }
 
-_main "${1}" "${2}" "${3}" "${4}"
+_main "${@}"
 
 #EOF
