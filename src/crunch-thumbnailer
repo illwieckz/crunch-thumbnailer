@@ -48,7 +48,7 @@ _main() {
 		OUTFILE="${4}"
 	fi
 
-	crunch -quiet -file "${INFILE}" -fileformat 'tga' -out '/dev/stdout' | convert -thumbnail "${SIZE}x${SIZE}" tga:- "png:${OUTFILE}"
+	crunch -quiet -file "${INFILE}" -fileformat 'tga' -out '/dev/stdout' | convert -thumbnail "${SIZE}x${SIZE}" -auto-orient tga:- "png:${OUTFILE}"
 }
 
 _main "${1}" "${2}" "${3}" "${4}"
